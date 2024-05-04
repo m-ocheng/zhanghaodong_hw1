@@ -2,7 +2,7 @@
  * @Author: mochen 3230104299@zju.edu.cn
  * @Date: 2024-04-08 18:03:46
  * @LastEditors: mochen 3230104299@zju.edu.cn
- * @LastEditTime: 2024-05-04 12:43:39
+ * @LastEditTime: 2024-05-04 22:43:42
  * @FilePath: \zhanghaodong_hw1\src\algebra.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,7 +34,7 @@ Matrix add_matrix(Matrix a, Matrix b)
     }
     else
     {
-        printf("Error: Matrix a and b must have the same rows and cols.");
+        printf("Error: Matrix a and b must have the same rows and cols.\n");
     }
     return create_matrix(0, 0);
 
@@ -56,7 +56,7 @@ Matrix sub_matrix(Matrix a, Matrix b)
     }
     else
     {
-        printf("Error: Matrix a and b must have the same rows and cols.");
+        printf("Error: Matrix a and b must have the same rows and cols.\n");
     }
     return create_matrix(0, 0);
 }
@@ -81,7 +81,7 @@ Matrix mul_matrix(Matrix a, Matrix b)
     }
     else
     {
-        printf("Error: The number of cols of matrix a must be equal to the number of rows of matrix b.");
+        printf("Error: The number of cols of matrix a must be equal to the number of rows of matrix b.\n");
     }
     return create_matrix(0, 0);
 }
@@ -102,10 +102,10 @@ Matrix scale_matrix(Matrix a, double k)
 
 Matrix transpose_matrix(Matrix a)
 {
-    Matrix c = create_matrix(a.rows,a.cols);
-                for (int i = 0; i < a.rows; i++)
+    Matrix c = create_matrix(a.cols,a.rows);
+                for (int i = 0; i < a.cols; i++)
                 {
-                    for (int j = 0; j < a.cols; j++)
+                    for (int j = 0; j < a.rows; j++)
                     {
                         c.data[i][j]=a.data[j][i];
                     }
@@ -179,11 +179,11 @@ Matrix inv_matrix(Matrix a)
                             {
                                 if(n<i)
                                 {
-                                    b.data[m][n]=a.data[j][i];
+                                    b.data[m][n]=a.data[m][n];
                                 }
                                 else
                                 {
-                                    b.data[m][n]=a.data[j][i+1];
+                                    b.data[m][n]=a.data[m][n+1];
                                 }
                             }
                         
@@ -191,17 +191,17 @@ Matrix inv_matrix(Matrix a)
                             {
                                 if(n<i)
                                 {
-                                    b.data[m][n]=a.data[j+1][i];
+                                    b.data[m][n]=a.data[m+1][n];
                                 }
                                 else
                                 {
-                                    b.data[m][n]=a.data[j+1][i+1];
+                                    b.data[m][n]=a.data[m+1][n+1];
                                 }
                             }
                         }
                     }
-                    int l = ((i+j)%2) ? -1:1;
-                    c.data[i][j]=l*det_matrix(b);
+                    double l = ((i+j)%2) ? -1:1;
+                    c.data[i][j]=l*det_matrix(b)/det_matrix(a);
 
                 }
             }
@@ -209,13 +209,13 @@ Matrix inv_matrix(Matrix a)
         }
         else
         {
-            printf("Error: The matrix is singular.");
+            printf("Error: The matrix is singular.\n");
         }
 
     }
     else
     {
-        printf("Error: The matrix must be a square matrix.");
+        printf("Error: The matrix must be a square matrix.\n");
     }
     return create_matrix(0, 0);
 }
@@ -223,7 +223,7 @@ Matrix inv_matrix(Matrix a)
 int rank_matrix(Matrix a)
 {
     int rank =a.rows < a.cols ? a.rows : a.cols;
-    for(int i = 0;i<a.cols;i++)
+    for(int i = 0;i<rank;i++)
     {
         if(a.data[i][i] == 0)
         {
@@ -248,7 +248,7 @@ int rank_matrix(Matrix a)
                 rank--;
                 for(int r=0;r<a.rows;r++)
                 {
-                    a.data[r][i]=a.data[r][rank];
+                    a.data[r][i]=a.data[r][a.cols-1];
                 }
             }
             
@@ -282,7 +282,7 @@ double trace_matrix(Matrix a)
     }
     else
     {
-        printf("Error: The matrix must be a square matrix.");
+        printf("Error: The matrix must be a square matrix.\n");
     }
     return 0;
 }
